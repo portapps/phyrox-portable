@@ -1,5 +1,9 @@
 # Changelog
 
+## 65.0.2-3 (2019/03/06)
+
+* Use [latest logo design](https://design.firefox.com/photon/visuals/product-identity-assets.html)
+
 ## 65.0.2-2 (2019/03/06)
 
 * Fix configuration values not handled
