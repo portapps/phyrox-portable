@@ -1,5 +1,10 @@
 # Changelog
 
+## 65.0.2-4 (2019/03/18)
+
+* Handle notifications
+* Portapps 1.20.3
+
 ## 65.0.2-3 (2019/03/06)
 
 * Use [latest logo design](https://design.firefox.com/photon/visuals/product-identity-assets.html)
