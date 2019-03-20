@@ -20,7 +20,7 @@ import (
 func bindataRead(data []byte, name string) ([]byte, error) {
 	gz, err := gzip.NewReader(bytes.NewBuffer(data))
 	if err != nil {
-		return nil, fmt.Errorf("Read %q: %v", name, err)
+		return nil, fmt.Errorf("read %q: %v", name, err)
 	}
 
 	var buf bytes.Buffer
@@ -28,7 +28,7 @@ func bindataRead(data []byte, name string) ([]byte, error) {
 	clErr := gz.Close()
 
 	if err != nil {
-		return nil, fmt.Errorf("Read %q: %v", name, err)
+		return nil, fmt.Errorf("read %q: %v", name, err)
 	}
 	if clErr != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func firefoxLnk() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "Firefox.lnk", size: 1224, mode: os.FileMode(438), modTime: time.Unix(1552001624, 0)}
+	info := bindataFileInfo{name: "Firefox.lnk", size: 1224, mode: os.FileMode(0666), modTime: time.Unix(1552001624, 0)}
 	a := &asset{bytes: bytes, info: info, digest: [32]uint8{0x24, 0xd0, 0x59, 0xcd, 0x33, 0x8f, 0xe0, 0x86, 0xf7, 0xdd, 0x55, 0x4b, 0xa2, 0x82, 0xe8, 0xfe, 0x37, 0x18, 0xa1, 0x8, 0x93, 0x93, 0xef, 0xd2, 0x87, 0x41, 0x56, 0xe1, 0xcb, 0xc2, 0xb0, 0x31}}
 	return a, nil
 }
