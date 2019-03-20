@@ -1,5 +1,9 @@
 # Changelog
 
+## 66.0-5 (2019/03/20)
+
+* Upgrade to Firefox 66.0
+
 ## 65.0.2-4 (2019/03/18)
 
 * Handle notifications
