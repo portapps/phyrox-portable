@@ -1,5 +1,10 @@
 # Changelog
 
+## 67.0-12 (2019/05/21)
+
+* Add config param to change locale
+* Make Firefox multilingual
+
 ## 67.0-11 (2019/05/20)
 
 * Firefox 67.0
