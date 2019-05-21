@@ -10,6 +10,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
+	"text/template"
 
 	_ "github.com/kevinburke/go-bindata"
 	"github.com/portapps/firefox-portable/assets"
@@ -25,6 +27,7 @@ type config struct {
 	MultipleInstances     bool   `yaml:"multiple_instances" mapstructure:"multiple_instances"`
 	DisableTelemetry      bool   `yaml:"disable_telemetry" mapstructure:"disable_telemetry"`
 	DisableFirefoxStudies bool   `yaml:"disable_firefox_studies" mapstructure:"disable_firefox_studies"`
+	Locale                string `yaml:"locale" mapstructure:"locale"`
 }
 
 type policies struct {
@@ -39,6 +42,10 @@ var (
 	cfg *config
 )
 
+const (
+	defaultLocale = "en-US"
+)
+
 func init() {
 	var err error
 
@@ -48,6 +55,7 @@ func init() {
 		MultipleInstances:     false,
 		DisableTelemetry:      false,
 		DisableFirefoxStudies: false,
+		Locale:                defaultLocale,
 	}
 
 	// Init app
@@ -64,6 +72,12 @@ func main() {
 	app.Args = []string{
 		"--profile",
 		profileFolder,
+	}
+
+	// Locale
+	locale, err := checkLocale()
+	if err != nil {
+		Log.Error().Err(err).Msg("Cannot set locale")
 	}
 
 	// Multiple instances
@@ -90,6 +104,45 @@ func main() {
 	}
 	if err = ioutil.WriteFile(utl.PathJoin(distributionFolder, "policies.json"), rawPolicies, 0644); err != nil {
 		Log.Fatal().Msg("Cannot write policies")
+	}
+
+	// Autoconfig
+	prefFolder := utl.CreateFolder(app.AppPath, "defaults/pref")
+	autoconfig := utl.PathJoin(prefFolder, "autoconfig.js")
+	if err := utl.CreateFile(autoconfig, `//
+pref("general.config.filename", "portapps.cfg");
+pref("general.config.obscure_value", 0);`); err != nil {
+		Log.Fatal().Err(err).Msg("Cannot write autoconfig.js")
+	}
+
+	// Mozilla cfg
+	mozillaCfgPath := utl.PathJoin(app.AppPath, "portapps.cfg")
+	mozillaCfgFile, err := os.Create(mozillaCfgPath)
+	if err != nil {
+		Log.Fatal().Err(err).Msg("Cannot create portapps.cfg")
+	}
+	mozillaCfgData := struct {
+		Telemetry string
+		Locale    string
+	}{
+		strconv.FormatBool(!cfg.DisableTelemetry),
+		locale,
+	}
+	mozillaCfgTpl := template.Must(template.New("mozillaCfg").Parse(`// Set locale
+pref("intl.locale.requested", "{{ .Locale }}");
+
+// Extensions scopes
+lockPref("extensions.enabledScopes", 4);
+lockPref("extensions.autoDisableScopes", 3);
+
+// Don't show 'know your rights' on first run
+pref("browser.rights.3.shown", true);
+
+// Don't show WhatsNew on first run after every update
+pref("browser.startup.homepage_override.mstone", "ignore");
+`))
+	if err := mozillaCfgTpl.Execute(mozillaCfgFile, mozillaCfgData); err != nil {
+		Log.Fatal().Err(err).Msg("Cannot write portapps.cfg")
 	}
 
 	// Set env vars
@@ -152,4 +205,28 @@ func main() {
 	}()
 
 	app.Launch(os.Args[1:])
+}
+
+func checkLocale() (string, error) {
+	extSourceFile := fmt.Sprintf("%s.xpi", cfg.Locale)
+	extDestFile := fmt.Sprintf("langpack-%s@firefox.mozilla.org.xpi", cfg.Locale)
+	extsFolder := utl.CreateFolder(app.AppPath, "distribution", "extensions")
+	localeXpi := utl.PathJoin(app.AppPath, "langs", extSourceFile)
+
+	// If default locale skip (already embedded)
+	if cfg.Locale == defaultLocale {
+		return cfg.Locale, nil
+	}
+
+	// Check .xpi file exists
+	if !utl.Exists(localeXpi) {
+		return defaultLocale, fmt.Errorf("XPI file does not exist in %s", localeXpi)
+	}
+
+	// Copy .xpi
+	if err := utl.CopyFile(localeXpi, utl.PathJoin(extsFolder, extDestFile)); err != nil {
+		return defaultLocale, err
+	}
+
+	return cfg.Locale, nil
 }
