@@ -1,5 +1,9 @@
 # Changelog
 
+## 67.0.1-13 (2019/06/04)
+
+* Firefox 67.0.1
+
 ## 67.0-12 (2019/05/21)
 
 * Add config param to change locale
