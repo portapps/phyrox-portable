@@ -255,27 +255,14 @@ func updateAddonStartup(profileFolder string) error {
 		return err
 	}
 
-	_, err = jsonAs.Set(utl.PathJoin(profileFolder, "extensions"), "app-profile", "path")
-	if err != nil {
-		return errors.Wrap(err, "couldn't set app-profile.path")
+	if err := updateAddons("app-global", utl.PathJoin(profileFolder, "extensions"), jsonAs); err != nil {
+		return err
 	}
-	_, err = jsonAs.Set(utl.PathJoin(app.AppPath, "browser", "features"), "app-system-defaults", "path")
-	if err != nil {
-		return errors.Wrap(err, "couldn't set app-system-defaults.path")
+	if err := updateAddons("app-profile", utl.PathJoin(profileFolder, "extensions"), jsonAs); err != nil {
+		return err
 	}
-	addonsProfile, _ := jsonAs.S("app-profile", "addons").ChildrenMap()
-	for key, addonProfile := range addonsProfile {
-		_, err = addonProfile.Set(fmt.Sprintf("jar:file:///%s/%s.xpi!/", utl.FormatUnixPath(utl.PathJoin(profileFolder, "extensions")), url.PathEscape(key)), "rootURI")
-		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("couldn't set app-profile %s.rootURI", key))
-		}
-	}
-	addonsSysDef, _ := jsonAs.S("app-system-defaults", "addons").ChildrenMap()
-	for key, addonSysDef := range addonsSysDef {
-		_, err = addonSysDef.Set(fmt.Sprintf("jar:file:///%s/%s.xpi!/", utl.FormatUnixPath(utl.PathJoin(app.AppPath, "browser", "features")), url.PathEscape(key)), "rootURI")
-		if err != nil {
-			return errors.Wrap(err, fmt.Sprintf("couldn't set app-system-defaults %s.rootURI", key))
-		}
+	if err := updateAddons("app-system-defaults", utl.PathJoin(app.AppPath, "browser", "features"), jsonAs); err != nil {
+		return err
 	}
 	Log.Debug().Msgf("Updated addonStartup.json: %s", jsonAs.String())
 
@@ -285,4 +272,23 @@ func updateAddonStartup(profileFolder string) error {
 	}
 
 	return ioutil.WriteFile(asLz4, encAsLz4, 0644)
+}
+
+func updateAddons(field string, basePath string, container *gabs.Container) error {
+	if _, ok := container.Search(field, "path").Data().(string); !ok {
+		return nil
+	}
+	if _, err := container.Set(basePath, field, "path"); err != nil {
+		return errors.Wrap(err, fmt.Sprintf("couldn't set %s.path", field))
+	}
+
+	addons, _ := container.S(field, "addons").ChildrenMap()
+	for key, addon := range addons {
+		_, err := addon.Set(fmt.Sprintf("jar:file:///%s/%s.xpi!/", utl.FormatUnixPath(basePath), url.PathEscape(key)), "rootURI")
+		if err != nil {
+			return errors.Wrap(err, fmt.Sprintf("couldn't set %s %s.rootURI", field, key))
+		}
+	}
+
+	return nil
 }
