@@ -1,5 +1,9 @@
 # Changelog
 
+## 67.0.1-15 (2019/06/06)
+
+* Extensions break on path change (Issue #2)
+
 ## 67.0.1-13 (2019/06/04)
 
 * Firefox 67.0.1
