@@ -8,12 +8,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path"
 	"strconv"
 	"text/template"
 
+	"github.com/Jeffail/gabs"
 	_ "github.com/kevinburke/go-bindata"
+	"github.com/pkg/errors"
 	"github.com/portapps/firefox-portable/assets"
 	. "github.com/portapps/portapps"
 	"github.com/portapps/portapps/pkg/dialog"
@@ -145,6 +148,11 @@ pref("browser.startup.homepage_override.mstone", "ignore");
 		Log.Fatal().Err(err).Msg("Cannot write portapps.cfg")
 	}
 
+	// Fix extensions path
+	if err := updateAddonStartup(profileFolder); err != nil {
+		Log.Error().Err(err).Msg("Cannot fix extensions path")
+	}
+
 	// Set env vars
 	crashreporterFolder := utl.CreateFolder(app.DataPath, "crashreporter")
 	pluginsFolder := utl.CreateFolder(app.DataPath, "plugins")
@@ -229,4 +237,52 @@ func checkLocale() (string, error) {
 	}
 
 	return cfg.Locale, nil
+}
+
+func updateAddonStartup(profileFolder string) error {
+	asLz4 := path.Join(profileFolder, "addonStartup.json.lz4")
+	if !utl.Exists(asLz4) {
+		return nil
+	}
+
+	decAsLz4, err := mozLz4Decompress(asLz4)
+	if err != nil {
+		return err
+	}
+
+	jsonAs, err := gabs.ParseJSON(decAsLz4)
+	if err != nil {
+		return err
+	}
+
+	_, err = jsonAs.Set(utl.PathJoin(profileFolder, "extensions"), "app-profile", "path")
+	if err != nil {
+		return errors.Wrap(err, "couldn't set app-profile.path")
+	}
+	_, err = jsonAs.Set(utl.PathJoin(app.AppPath, "browser", "features"), "app-system-defaults", "path")
+	if err != nil {
+		return errors.Wrap(err, "couldn't set app-system-defaults.path")
+	}
+	addonsProfile, _ := jsonAs.S("app-profile", "addons").ChildrenMap()
+	for key, addonProfile := range addonsProfile {
+		_, err = addonProfile.Set(fmt.Sprintf("jar:file:///%s/%s.xpi!/", utl.FormatUnixPath(utl.PathJoin(profileFolder, "extensions")), url.PathEscape(key)), "rootURI")
+		if err != nil {
+			return errors.Wrap(err, fmt.Sprintf("couldn't set app-profile %s.rootURI", key))
+		}
+	}
+	addonsSysDef, _ := jsonAs.S("app-system-defaults", "addons").ChildrenMap()
+	for key, addonSysDef := range addonsSysDef {
+		_, err = addonSysDef.Set(fmt.Sprintf("jar:file:///%s/%s.xpi!/", utl.FormatUnixPath(utl.PathJoin(app.AppPath, "browser", "features")), url.PathEscape(key)), "rootURI")
+		if err != nil {
+			return errors.Wrap(err, fmt.Sprintf("couldn't set app-system-defaults %s.rootURI", key))
+		}
+	}
+	Log.Debug().Msgf("Updated addonStartup.json: %s", jsonAs.String())
+
+	encAsLz4, err := mozLz4Compress(jsonAs.Bytes())
+	if err != nil {
+		return err
+	}
+
+	return ioutil.WriteFile(asLz4, encAsLz4, 0644)
 }
