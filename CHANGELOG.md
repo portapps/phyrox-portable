@@ -1,5 +1,10 @@
 # Changelog
 
+## 69.0-24 (2019/09/09)
+
+* Fix addons disabled on startup (Issue #3)
+* Portapps 1.26.1
+
 ## 69.0-23 (2019/09/02)
 
 * Firefox 69.0
