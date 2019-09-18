@@ -1,5 +1,9 @@
 # Changelog
 
+## 69.0.1-25 (2019/09/18)
+
+* Firefox 69.0.1
+
 ## 69.0-24 (2019/09/09)
 
 * Fix addons disabled on startup (Issue #3)
