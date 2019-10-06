@@ -15,7 +15,6 @@ import (
 	"text/template"
 
 	"github.com/Jeffail/gabs"
-	_ "github.com/kevinburke/go-bindata"
 	"github.com/pkg/errors"
 	"github.com/portapps/firefox-portable/assets"
 	. "github.com/portapps/portapps"
