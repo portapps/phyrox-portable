@@ -1,5 +1,9 @@
 # Changelog
 
+## 70.0.1-30 (2019/11/03)
+
+* Firefox 70.0.1
+
 ## 70.0-29 (2019/10/29)
 
 * Update Firefox logo
