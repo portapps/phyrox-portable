@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="firefox" basedir=".">
+<project name="phyrox" basedir=".">
 
-  <dirname property="app.basedir" file="${ant.file.firefox}"/>
+  <dirname property="app.basedir" file="${ant.file.phyrox}"/>
   <property name="build.properties" value="${app.basedir}/build.properties"/>
   <property file="${build.properties}"/>
 

@@ -1,27 +1,21 @@
-<p align="center"><a href="https://portapps.io/app/firefox-portable/" target="_blank"><img width="100" src="https://github.com/portapps/firefox-portable/blob/master/res/papp.png"></a></p>
+<p align="center"><a href="https://portapps.io/app/phyrox-portable/" target="_blank"><img width="100" src="https://github.com/portapps/phyrox-portable/blob/master/res/papp.png"></a></p>
 
 <p align="center">
-  <a href="https://portapps.io/app/firefox-portable/#download"><img src="https://img.shields.io/github/release/portapps/firefox-portable.svg?style=flat-square" alt="GitHub release"></a>
-  <a href="https://portapps.io/app/firefox-portable/#download"><img src="https://img.shields.io/github/downloads/portapps/firefox-portable/total.svg?style=flat-square" alt="Total downloads"></a>
-  <a href="https://travis-ci.com/portapps/firefox-portable"><img src="https://img.shields.io/travis/com/portapps/firefox-portable/master.svg?style=flat-square" alt="Build Status"></a>
-  <a href="https://goreportcard.com/report/github.com/portapps/firefox-portable"><img src="https://goreportcard.com/badge/github.com/portapps/firefox-portable?style=flat-square" alt="Go Report"></a>
-  <a href="https://www.codacy.com/app/portapps/firefox-portable"><img src="https://img.shields.io/codacy/grade/27d28a8f85c246c2b510f3a23f9cbe0a.svg?style=flat-square" alt="Code Quality"></a>
+  <a href="https://portapps.io/app/phyrox-portable/#download"><img src="https://img.shields.io/github/release/portapps/phyrox-portable.svg?style=flat-square" alt="GitHub release"></a>
+  <a href="https://portapps.io/app/phyrox-portable/#download"><img src="https://img.shields.io/github/downloads/portapps/phyrox-portable/total.svg?style=flat-square" alt="Total downloads"></a>
+  <a href="https://travis-ci.com/portapps/phyrox-portable"><img src="https://img.shields.io/travis/com/portapps/phyrox-portable/master.svg?style=flat-square" alt="Build Status"></a>
+  <a href="https://goreportcard.com/report/github.com/portapps/phyrox-portable"><img src="https://goreportcard.com/badge/github.com/portapps/phyrox-portable?style=flat-square" alt="Go Report"></a>
+  <a href="https://www.codacy.com/app/portapps/phyrox-portable"><img src="https://img.shields.io/codacy/grade/27d28a8f85c246c2b510f3a23f9cbe0a.svg?style=flat-square" alt="Code Quality"></a>
   <br /><a href="https://github.com/sponsors/crazy-max"><img src="https://img.shields.io/badge/sponsor-crazy--max-181717.svg?logo=github&style=flat-square" alt="Become a sponsor"></a>
   <a href="https://www.paypal.me/crazyws"><img src="https://img.shields.io/badge/donate-paypal-00457c.svg?logo=paypal&style=flat-square" alt="Donate Paypal"></a>
 </p>
 
-## Notice of Non-Affiliation and Disclaimer
-
-Portapps is not affiliated, associated, authorized, endorsed by, or in any way officially connected with Firefox™, or any of its subsidiaries or its affiliates.
-
-The official Firefox™ website can be found at https://www.mozilla.org.
-
-The name Firefox™ as well as related names, marks, emblems and images are registered trademarks of their respective owners.
-
 ## About
 
-Firefox™ portable app made with 🚀 [Portapps](https://portapps.io).<br />
-Documentation and downloads can be found on https://portapps.io/app/firefox-portable/
+Phyrox (based on Mozilla Firefox) portable app made with 🚀 [Portapps](https://portapps.io).<br />
+Documentation and downloads can be found on https://portapps.io/app/phyrox-portable/
+
+> :warning: Following a trademark violation report (#11) from Mozilla, Firefox portable has been named Phyrox portable on Portapps. Nothing changes except its name.
 
 ## How can I help ?
 
@@ -32,4 +26,5 @@ Thanks again for your support, it is much appreciated! :pray:
 ## License
 
 MIT. See `LICENSE` for more details.<br />
+Logo credit to [Nadja Hallfahrt](http://blog.artcore-illustrations.de/).<br />
 Rocket icon credit to [Squid Ink](http://thesquid.ink).
