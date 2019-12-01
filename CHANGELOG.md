@@ -2,7 +2,7 @@
 
 ## 70.0.1-31 (2019/12/01)
 
-* :warning: Following a trademark violation report (#11), name and logo has been changed.
+* Following a trademark violation report (#11), name and logo has been changed.
 
 ## 70.0.1-30 (2019/11/03)
 
