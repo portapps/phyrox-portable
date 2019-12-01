@@ -15,7 +15,7 @@
 Phyrox (based on Mozilla Firefox) portable app made with 🚀 [Portapps](https://portapps.io).<br />
 Documentation and downloads can be found on https://portapps.io/app/phyrox-portable/
 
-> :warning: Following a trademark violation report (#11) from Mozilla, Firefox portable has been named Phyrox portable on Portapps. Nothing changes except its name.
+> :warning: Following a trademark violation report ([#11](https://github.com/portapps/phyrox-portable/issues/11)) from Mozilla, Firefox portable has been named Phyrox portable on Portapps. Nothing changes except its name.
 
 ## How can I help ?
 
