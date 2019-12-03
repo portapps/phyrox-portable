@@ -1,5 +1,9 @@
 # Changelog
 
+## 71.0-32 (2019/12/03)
+
+* Firefox 71.0
+
 ## 70.0.1-31 (2019/12/01)
 
 * Following a trademark violation report (#11), name and logo have been changed
