@@ -1,5 +1,11 @@
 # Changelog
 
+## 72.0-33 (2020/01/06)
+
+* Firefox 72.0
+* Add `cleanup` config
+* Portapps 1.31.0
+
 ## 71.0-32 (2019/12/03)
 
 * Firefox 71.0
