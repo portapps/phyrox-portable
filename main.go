@@ -30,6 +30,7 @@ type config struct {
 	DisableTelemetry      bool   `yaml:"disable_telemetry" mapstructure:"disable_telemetry"`
 	DisableFirefoxStudies bool   `yaml:"disable_firefox_studies" mapstructure:"disable_firefox_studies"`
 	Locale                string `yaml:"locale" mapstructure:"locale"`
+	Cleanup               bool   `yaml:"cleanup" mapstructure:"cleanup"`
 }
 
 type policies struct {
@@ -58,6 +59,7 @@ func init() {
 		DisableTelemetry:      false,
 		DisableFirefoxStudies: false,
 		Locale:                defaultLocale,
+		Cleanup:               false,
 	}
 
 	// Init app
@@ -74,6 +76,17 @@ func main() {
 	app.Args = []string{
 		"--profile",
 		profileFolder,
+	}
+
+	// Cleanup on exit
+	if cfg.Cleanup {
+		defer func() {
+			utl.Cleanup([]string{
+				path.Join(os.Getenv("APPDATA"), "Mozilla", "Firefox"),
+				path.Join(os.Getenv("LOCALAPPDATA"), "Mozilla", "Firefox"),
+				path.Join(os.Getenv("USERPROFILE"), "AppData", "LocalLow", "Mozilla"),
+			})
+		}()
 	}
 
 	// Locale
