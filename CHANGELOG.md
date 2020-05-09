@@ -1,5 +1,12 @@
 # Changelog
 
+## 76.0-41 (2020/05/10)
+
+* Firefox 76.0
+* Allow custom `policies.json`
+* `DisableTelemetry` and `DisableFirefoxStudies` removed (use policies file instead)
+* Portapps 2.2.4
+
 ## 75.0-40 (2020/04/12)
 
 * Firefox 75.0
