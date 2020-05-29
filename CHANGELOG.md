@@ -2,7 +2,7 @@
 
 ## 76.0.1-42 (2020/05/29)
 
-* Fix addons startup (Issue #3) 
+* Fix addons startup (#3) 
 * Portapps 2.4.4
 
 ## 76.0.1-41 (2020/05/10)
@@ -84,7 +84,7 @@
 
 ## 69.0-24 (2019/09/09)
 
-* Fix addons disabled on startup (Issue #3)
+* Fix addons disabled on startup (#3)
 * Portapps 1.26.1
 
 ## 69.0-23 (2019/09/02)
@@ -119,7 +119,7 @@
 
 ## 67.0.1-15 (2019/06/06)
 
-* Extensions break on path change (Issue #2)
+* Extensions break on path change (#2)
 
 ## 67.0.1-13 (2019/06/04)
 
