@@ -1,5 +1,10 @@
 # Changelog
 
+## 76.0.1-42 (2020/05/29)
+
+* Fix addons startup (Issue #3) 
+* Portapps 2.4.4
+
 ## 76.0.1-41 (2020/05/10)
 
 * Firefox 76.0.1
