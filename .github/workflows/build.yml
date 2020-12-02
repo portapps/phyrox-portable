@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  build:
     runs-on: windows-latest
     steps:
       -
