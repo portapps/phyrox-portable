@@ -15,10 +15,19 @@ jobs:
         name: Checkout
         uses: actions/checkout@v2
       -
+        name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+      -
         name: Config
         run: |
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          echo "$(go env GOPATH)/bin/windows_386" >> $GITHUB_PATH
+
           echo "PORTAPPS_VERSION=$(cat go.mod | grep github.com/portapps/portapps | awk '{print $NF}')" >> $GITHUB_ENV
           echo "PORTAPPS_DIR=./.portapps" >> $GITHUB_ENV
+
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo "GIT_TAGNAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
           fi
@@ -30,11 +39,6 @@ jobs:
           repository: portapps/portapps
           #ref: ${{ env.PORTAPPS_VERSION }}
           path: ${{ env.PORTAPPS_DIR }}
-      -
-        name: Set up Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.15
       -
         name: Cache Go modules
         uses: actions/cache@v2
@@ -59,3 +63,7 @@ jobs:
           name: ${{ env.GIT_TAGNAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Dump context
+        if: always()
+        uses: crazy-max/ghaction-dump-context@v1
