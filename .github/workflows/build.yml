@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: portapps/portapps
-          ref: ${{ env.PORTAPPS_VERSION }}
+          #ref: ${{ env.PORTAPPS_VERSION }}
           path: ${{ env.PORTAPPS_DIR }}
       -
         name: Set up Go
