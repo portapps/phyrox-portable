@@ -1,5 +1,11 @@
 # Changelog
 
+## 87.0-55 (2021/04/04)
+
+* Firefox 87
+* Portapps 3.3.0
+* No more win32 release
+
 ## 85.0.1-54 (2021/02/06)
 
 * Firefox 85.0.1
