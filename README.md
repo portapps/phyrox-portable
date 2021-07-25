@@ -16,9 +16,13 @@ Documentation and downloads can be found on https://portapps.io/app/phyrox-porta
 
 > :warning: Following a trademark violation report ([#11](https://github.com/portapps/phyrox-portable/issues/11)) from Mozilla, Firefox portable has been named Phyrox portable on Portapps. Nothing changes except its name.
 
-## How can I help?
+## Contributing
 
-All kinds of contributions are welcome :raised_hands:! The most basic way to show your support is to star :star2: the project, or to raise issues :speech_balloon: You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) :clap: or by making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely! :rocket:
+Want to contribute? Awesome! The most basic way to show your support is to star the project, or to raise issues. If
+you want to open a pull request, please read the [contributing guidelines](https://portapps.io/doc/contribute/).
+
+You can also support this project by [**becoming a sponsor on GitHub**](https://github.com/sponsors/crazy-max) or by
+making a [Paypal donation](https://www.paypal.me/crazyws) to ensure this journey continues indefinitely!
 
 Thanks again for your support, it is much appreciated! :pray:
 
