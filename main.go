@@ -6,7 +6,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"strings"
@@ -172,7 +171,7 @@ pref("browser.startup.homepage_override.mstone", "ignore");
 	if err != nil {
 		log.Error().Err(err).Msg("Cannot load asset Firefox.lnk")
 	}
-	err = ioutil.WriteFile(shortcutPath, defaultShortcut, 0644)
+	err = os.WriteFile(shortcutPath, defaultShortcut, 0644)
 	if err != nil {
 		log.Error().Err(err).Msg("Cannot write default shortcut")
 	}
@@ -218,7 +217,7 @@ func createPolicies() error {
 	log.Debug().Msgf("Default policies: %s", jsonPolicies.String())
 
 	if utl.Exists(dataFile) {
-		rawCustomPolicies, err := ioutil.ReadFile(dataFile)
+		rawCustomPolicies, err := os.ReadFile(dataFile)
 		if err != nil {
 			return errors.Wrap(err, "Cannot read custom policies")
 		}
@@ -234,7 +233,7 @@ func createPolicies() error {
 	}
 
 	log.Debug().Msgf("Applied policies: %s", jsonPolicies.String())
-	err = ioutil.WriteFile(appFile, []byte(jsonPolicies.StringIndent("", "  ")), 0644)
+	err = os.WriteFile(appFile, []byte(jsonPolicies.StringIndent("", "  ")), 0644)
 	if err != nil {
 		return errors.Wrap(err, "Cannot write policies")
 	}
@@ -290,5 +289,5 @@ func updateAddonStartup(profileFolder string) error {
 		return err
 	}
 
-	return ioutil.WriteFile(lz4File, lz4Enc, 0644)
+	return os.WriteFile(lz4File, lz4Enc, 0644)
 }
