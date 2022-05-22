@@ -1,5 +1,12 @@
 # Changelog
 
+## 100.0.2-61 (2022/05/22)
+
+* Firefox 100.0.2
+* Portapps 3.5.0
+* Bump github.com/pierrec/lz4/v3 from 3.3.4 to 3.3.5 (#69)
+* Bump github.com/kevinburke/go-bindata (#61)
+
 ## 96.0.3-60 (2022/01/27)
 
 * Firefox 96.0.3
