@@ -1,5 +1,11 @@
 # Changelog
 
+## 105.0.2-62 (2022/10/04)
+
+* Firefox 105.0.2
+* Portapps 3.6.0
+* Bump github.com/kevinburke/go-bindata
+
 ## 100.0.2-61 (2022/05/22)
 
 * Firefox 100.0.2
