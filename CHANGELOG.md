@@ -1,5 +1,10 @@
 # Changelog
 
+## 152.0.4-70 (2026/07/05)
+
+* Firefox 152.0.4
+* Modernize portability policies and privacy controls
+
 ## 150.0.2-69 (2026/05/11)
 
 * Firefox 150.0.2
