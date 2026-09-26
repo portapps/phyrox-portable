@@ -1,0 +1,155 @@
+name: update-app
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 9 * * *'
+  push:
+    branches:
+      - 'master'
+  pull_request:
+    paths:
+      - '.github/workflows/update-app.yml'
+      - 'build.properties'
+
+jobs:
+  update:
+    if: github.event_name != 'pull_request'
+    runs-on: windows-latest
+    environment: update-app
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      -
+        name: GitHub auth token from GitHub App
+        id: write-app
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ vars.PORTAPPS_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.PORTAPPS_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: write
+          permission-pull-requests: write
+      -
+        name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          token: ${{ steps.write-app.outputs.token }}
+          persist-credentials: false
+      -
+        name: Update Firefox
+        id: update
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: &update-script |
+            const fs = require('fs');
+            const path = require('path');
+
+            const response = await fetch('https://product-details.mozilla.org/1.0/firefox_versions.json');
+            if (!response.ok) {
+              throw new Error(`Mozilla version request failed: ${response.status}`);
+            }
+            const { LATEST_FIREFOX_VERSION: latest } = await response.json();
+            const versionPattern = /^\d+(?:\.\d+){1,2}$/;
+            if (typeof latest !== 'string' || !versionPattern.test(latest)) {
+              throw new Error(`Unexpected Firefox version: ${latest}`);
+            }
+
+            const propertiesPath = path.join(process.env.GITHUB_WORKSPACE, 'build.properties');
+            const original = fs.readFileSync(propertiesPath, 'utf8');
+            function property(content, name) {
+              const match = content.match(new RegExp(`^${name.replace('.', '\\.')}[ \\t]*=[ \\t]*([^\\r\\n]+)`, 'm'));
+              if (!match) {
+                throw new Error(`Missing ${name} in build.properties`);
+              }
+              return match[1].trim();
+            }
+            function replaceProperty(content, name, value) {
+              const pattern = new RegExp(`^(${name.replace('.', '\\.')}[ \\t]*=[ \\t]*)[^\\r\\n]*`, 'm');
+              return content.replace(pattern, (_, prefix) => `${prefix}${value}`);
+            }
+
+            const current = property(original, 'app.version');
+            const currentMatch = current.match(versionPattern);
+            if (!currentMatch) {
+              throw new Error(`Unexpected current Firefox version: ${current}`);
+            }
+            const release = Number(property(original, 'app.release'));
+            if (!Number.isSafeInteger(release) || release < 0) {
+              throw new Error(`Invalid app.release: ${release}`);
+            }
+
+            const latestParts = latest.split('.').map(Number);
+            const currentParts = current.split('.').map(Number);
+            for (let index = 0; index < Math.max(latestParts.length, currentParts.length); index++) {
+              const latestPart = latestParts[index] || 0;
+              const currentPart = currentParts[index] || 0;
+              if (latestPart < currentPart) {
+                throw new Error(`Mozilla reported ${latest}, older than current ${current}`);
+              }
+              if (latestPart > currentPart) {
+                break;
+              }
+            }
+
+            if (latest !== current) {
+              let updated = replaceProperty(original, 'app.version', latest);
+              updated = replaceProperty(updated, 'app.release', String(release + 1));
+              fs.writeFileSync(propertiesPath, updated, 'utf8');
+              core.info(`Updated Firefox from ${current} to ${latest}`);
+            } else {
+              core.info(`Firefox ${current} is up to date`);
+            }
+            core.setOutput('version', latest);
+      -
+        name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          base: ${{ github.event.repository.default_branch }}
+          branch: update-firefox
+          token: ${{ steps.write-app.outputs.token }}
+          commit-message: Firefox ${{ steps.update.outputs.version }}
+          title: Firefox ${{ steps.update.outputs.version }}
+          signoff: true
+          sign-commits: true
+          delete-branch: true
+          body: |
+            This updates Firefox to ${{ steps.update.outputs.version }}.
+
+  diff:
+    if: github.event_name == 'pull_request'
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      -
+        name: Update Firefox
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: *update-script
+      -
+        name: Show diff
+        shell: pwsh
+        run: |
+          $diff = git --no-pager diff -- build.properties
+          if ($diff) {
+            $diff
+          } else {
+            Write-Host "No update diff."
+          }
